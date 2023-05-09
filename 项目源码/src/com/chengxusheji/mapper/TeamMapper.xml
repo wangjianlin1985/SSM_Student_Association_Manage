@@ -1,0 +1,48 @@
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.TeamMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加社团记录 -->
+	<insert id="addTeam" parameterType="team">
+		insert into t_team(teamUserName,password,teamName,shoolName,area,teamPhoto,mainUnit,birthDate,email,telephone,chargeMan,address,personList) values 
+		(#{teamUserName},#{password},#{teamName},#{shoolName},#{area},#{teamPhoto},#{mainUnit},#{birthDate},#{email},#{telephone},#{chargeMan},#{address},#{personList})
+	</insert>
+
+	<!-- 按照查询条件分页查询社团记录 -->
+	<select id="queryTeam" resultMap="teamMap" >
+		select t_team.* from t_team ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="teamMap" type="team">
+        <id property="teamUserName" column="teamUserName" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有社团记录 -->
+	<select id="queryTeamList" resultMap="teamMap" >
+		select t_team.* from t_team ${where}
+	</select>
+
+    <!-- 按照查询条件的社团记录数 -->
+	<select id="queryTeamCount" resultType="int">
+		select count(*) from t_team ${where}
+	</select>
+
+	<!-- 根据主键查询某个社团记录 -->
+	<select id="getTeam" parameterType="string" resultMap="teamMap">
+		select * from t_team where t_team.teamUserName = #{teamUserName}
+	</select>
+
+	<!-- 更新社团记录 -->
+	<update id="updateTeam" parameterType="team">
+		update t_team set password=#{password},teamName=#{teamName},shoolName=#{shoolName},area=#{area},teamPhoto=#{teamPhoto},mainUnit=#{mainUnit},birthDate=#{birthDate},email=#{email},telephone=#{telephone},chargeMan=#{chargeMan},address=#{address},personList=#{personList} where teamUserName = #{teamUserName}
+	</update>
+
+	<!-- 删除社团记录 -->
+	<delete id="deleteTeam" parameterType="string">
+		delete from t_team where teamUserName=#{teamUserName}
+	</delete>
+
+</mapper>

@@ -1,0 +1,48 @@
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.SignUpSateMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加审核状态记录 -->
+	<insert id="addSignUpSate" parameterType="signUpSate">
+		insert into t_signUpSate(stateName) values 
+		(#{stateName})
+	</insert>
+
+	<!-- 按照查询条件分页查询审核状态记录 -->
+	<select id="querySignUpSate" resultMap="signUpSateMap" >
+		select t_signUpSate.* from t_signUpSate ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="signUpSateMap" type="signUpSate">
+        <id property="stateId" column="stateId" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有审核状态记录 -->
+	<select id="querySignUpSateList" resultMap="signUpSateMap" >
+		select t_signUpSate.* from t_signUpSate ${where}
+	</select>
+
+    <!-- 按照查询条件的审核状态记录数 -->
+	<select id="querySignUpSateCount" resultType="int">
+		select count(*) from t_signUpSate ${where}
+	</select>
+
+	<!-- 根据主键查询某个审核状态记录 -->
+	<select id="getSignUpSate" parameterType="int" resultMap="signUpSateMap">
+		select * from t_signUpSate where t_signUpSate.stateId = #{stateId}
+	</select>
+
+	<!-- 更新审核状态记录 -->
+	<update id="updateSignUpSate" parameterType="signUpSate">
+		update t_signUpSate set stateName=#{stateName} where stateId = #{stateId}
+	</update>
+
+	<!-- 删除审核状态记录 -->
+	<delete id="deleteSignUpSate" parameterType="int">
+		delete from t_signUpSate where stateId=#{stateId}
+	</delete>
+
+</mapper>
